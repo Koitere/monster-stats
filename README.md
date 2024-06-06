@@ -6,6 +6,10 @@ The Monster Stats Plugin provides a quick way to access the defensive stats of N
 
 Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
 
+## TODO
+- Support for monsters with multiple variants (coming in v1.1)
+- Allow stat checking for monsters that may not have combat levels but still have stats (e.g. implings)
+
 ## Features
 
 - **Hover Tooltip**: Toggle-able tooltip that displays elemental weaknesses and percentages as well as defensive stats for all styles.
