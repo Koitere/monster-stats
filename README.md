@@ -4,6 +4,8 @@
 
 The Monster Stats Plugin provides a quick way to access the defensive stats of NPCs in Old School RuneScape (OSRS).
 
+Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
+
 ## Features
 
 - **Hover Tooltip**: Toggle-able tooltip that displays elemental weaknesses and percentages as well as defensive stats for all styles.
