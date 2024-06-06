@@ -7,10 +7,14 @@ The Monster Stats Plugin provides a quick way to access the defensive stats of N
 ## Features
 
 - **Hover Tooltip**: Toggle-able tooltip that displays elemental weaknesses and percentages as well as defensive stats for all styles.
+  
   ![image](https://github.com/Koitere/monster-stats/assets/48294933/5c2af5e5-99d2-4c15-ae78-d31800ddf789)
 - **Right-click Stats Option**: Adds a 'Stats' option to the right-click menu for NPCs, opening a detailed defensive stats panel in the sidebar.
+  
  ![image](https://github.com/Koitere/monster-stats/assets/48294933/cc73c955-01e5-40d5-bd4f-07ddaed1a24e)
+ 
 - **Search Functionality**: Allows users to search for specific NPCs and view their defensive stats in the sidebar.
+  
  ![image](https://github.com/Koitere/monster-stats/assets/48294933/5f80b58a-47b1-414b-b170-61d63d00af51)
 
 ## Configuration Options
