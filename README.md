@@ -7,21 +7,19 @@ The Monster Stats Plugin provides a quick way to access the defensive stats of N
 Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
 
 ## TODO
-- Support for monsters with multiple variants (coming in v1.1)
 - Allow stat checking for monsters that may not have combat levels but still have stats (e.g. implings)
 
 ## Features
 
-- **Hover Tooltip**: Toggle-able tooltip that displays elemental weaknesses and percentages as well as defensive stats for all styles.
-  
-  ![image](https://github.com/Koitere/monster-stats/assets/48294933/5c2af5e5-99d2-4c15-ae78-d31800ddf789)
+- **Hover Tooltip**: Toggle-able tooltip that displays elemental weaknesses and percentages as well as defensive stats for all styles. Compatible with other tooltips (like Runelite's Mouse Tooltips Plugin)
+  ![image](https://github.com/user-attachments/assets/267527e7-ff75-4a2c-9986-17561fbdd29f)
+
 - **Right-click Stats Option**: Adds a 'Stats' option to the right-click menu for NPCs, opening a detailed defensive stats panel in the sidebar.
   
  ![image](https://github.com/Koitere/monster-stats/assets/48294933/cc73c955-01e5-40d5-bd4f-07ddaed1a24e)
  
-- **Search Functionality**: Allows users to search for specific NPCs and view their defensive stats in the sidebar.
-  
- ![image](https://github.com/Koitere/monster-stats/assets/48294933/5f80b58a-47b1-414b-b170-61d63d00af51)
+- **Search Functionality**: Allows users to search for specific NPCs and view their defensive stats in the sidebar. Support for selecting alternate variants/forms of monsters by searching for the monster and using the variant buttons.
+ ![image](https://github.com/user-attachments/assets/3619434c-dd66-45af-81da-2144ec056e78)
 
 ## Configuration Options
 
@@ -41,9 +39,15 @@ Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
 
 Please note that this plugin is still in development. Some features may not work as expected, and there may be occasional bugs or performance issues. We appreciate your feedback and patience as we continue to improve the plugin.
 
-NPCs that have multiple 'forms' (e.g. Guards) and as a result have switch infoboxes on the Wiki may not display the correct stats, I'm still working out a way around this but at the moment a good majority of NPCs work properly.
-
 ## Change Log
+
+### Version 1.1.0
+- Improvements and Bug Fixes:
+  - Added support for monsters with multiple variants.
+  - Improved visuals for mouseover tooltips.
+  - Fixed mouseover tooltips not working with other tooltip plugins.
+  - Added support for new/more NPCs.
+  - NPC right click is now by ID and should be accurate to wiki data, all NPCs with wiki data stats/NPC Ids are available.
 
 ### Version 1.0.0
 - Initial release with core features:
