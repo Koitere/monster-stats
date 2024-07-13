@@ -1,5 +1,8 @@
 package com.monsterstats;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NPCDataCleaner {
 
     public static String cleanData(String start) {
@@ -7,6 +10,30 @@ public class NPCDataCleaner {
             return "?";
         }
         return getFirstValue(start.replace("\"", "").trim());
+    }
+
+    public static List<Integer> parseNPCIDs(String input) {
+        List<Integer> result = new ArrayList<>();
+        if (input.charAt(0) =='\"') {
+            input = input.split("\"", 2)[1];
+        }
+        if (input == null || input.isEmpty() || input.equals("?")) {
+            result.add(-1);
+            return result;
+        }
+        // Split the input string by commas
+        String[] parts = input.split(",");
+
+        // Parse each part into an integer and add to the result list
+        for (String part : parts) {
+            try {
+                result.add(Integer.parseInt(part.trim()));
+            } catch (NumberFormatException e) {
+                // Handle the case where part is not a valid integer
+                System.err.println("Invalid number format: " + part);
+            }
+        }
+        return result;
     }
 
     public static String cleanElementalWeakness(String start) {

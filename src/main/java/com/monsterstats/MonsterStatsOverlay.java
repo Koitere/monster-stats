@@ -12,14 +12,15 @@ import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.*;
 import net.runelite.client.ui.overlay.components.ComponentOrientation;
+import net.runelite.client.ui.overlay.tooltip.Tooltip;
+import net.runelite.client.ui.overlay.tooltip.TooltipManager;
 import net.runelite.client.util.ImageUtil;
 
 public class MonsterStatsOverlay extends Overlay
 {
     private final MonsterStatsPlugin plugin;
+    private final TooltipManager tooltipManager;
     private final Client client;
-
-    private static final Dimension IMAGE_SIZE = new Dimension(24, 24);
 
     final BufferedImage stabIcon;
     final BufferedImage crushIcon;
@@ -35,10 +36,11 @@ public class MonsterStatsOverlay extends Overlay
     final BufferedImage earthIcon;
 
     @Inject
-    MonsterStatsOverlay(MonsterStatsPlugin plugin, Client client)
+    MonsterStatsOverlay(MonsterStatsPlugin plugin, Client client, TooltipManager tooltipManager)
     {
         this.plugin = plugin;
         this.client = client;
+        this.tooltipManager = tooltipManager;
         setPosition(OverlayPosition.DYNAMIC);
         setLayer(OverlayLayer.ABOVE_SCENE);
         stabIcon = ImageUtil.loadImageResource(getClass(),"/White_dagger.png");
@@ -102,64 +104,48 @@ public class MonsterStatsOverlay extends Overlay
             return;
         }
 
-        String npcName = npc.getName();
-        NPCStats npcStats = NPCDataLoader.getNPCStats(npcName);
+        Integer npcID = npc.getId();
+        NPCStats idStats = NPCDataLoader.getIDStats(npcID);
 
         if (isHoveringGameScene())
         {
-            renderTooltip(graphics, npcStats);
+            renderTooltip(graphics, idStats);
         }
     }
 
 private void renderTooltip(Graphics2D graphics, NPCStats stats)
 {
-    // Get the current mouse position
     Point mousePosition = client.getMouseCanvasPosition();
-
     // Create a horizontal panel for icons and stats
     PanelComponent rowPanel = new PanelComponent();
     rowPanel.setPreferredLocation(new java.awt.Point(mousePosition.getX(), mousePosition.getY()));
     rowPanel.setOrientation(ComponentOrientation.HORIZONTAL);
-    rowPanel.setBackgroundColor(Color.DARK_GRAY);
-    rowPanel.setGap(new java.awt.Point(20, 0));  // Add horizontal gap between components
+    rowPanel.setBorder(new Rectangle(2,2,305,55)); //Set border of resulting tooltip
+    rowPanel.setGap(new java.awt.Point(2, 0));  // Add horizontal gap between components
 
-    // Add icons and corresponding stats
-    rowPanel.getChildren().add(createIconWithText(resizeImage(crushIcon), stats.getCrushDefence()));
-    rowPanel.getChildren().add(createIconWithText(resizeImage(stabIcon), stats.getStabDefence()));
-    rowPanel.getChildren().add(createIconWithText(resizeImage(slashIcon), stats.getSlashDefence()));
-    rowPanel.getChildren().add(createIconWithText(resizeImage(getElementalWeaknessIcon(stats.getElementalWeakness())), stats.getElementalPercent() + "%"));
-    rowPanel.getChildren().add(createIconWithText(resizeImage(magicIcon), stats.getMagicDefence()));
-    rowPanel.getChildren().add(createIconWithText(resizeImage(standardIcon), stats.getStandardDefence()));
-    rowPanel.getChildren().add(createIconWithText(resizeImage(heavyIcon), stats.getHeavyDefence()));
-    rowPanel.getChildren().add(createIconWithText(resizeImage(lightIcon), stats.getLightDefence()));
+    tooltipManager.addFront(new Tooltip(rowPanel));
+    rowPanel.getChildren().add(createIconWithText( (stabIcon), stats.getStabDefence()));
+    rowPanel.getChildren().add(createIconWithText( (crushIcon), stats.getCrushDefence()));
+    rowPanel.getChildren().add(createIconWithText( (slashIcon), stats.getSlashDefence()));
+    rowPanel.getChildren().add(createIconWithText( (getElementalWeaknessIcon(stats.getElementalWeakness())), stats.getElementalPercent() + "%"));
+    rowPanel.getChildren().add(createIconWithText( (magicIcon), stats.getMagicDefence()));
+    rowPanel.getChildren().add(createIconWithText( (standardIcon), stats.getStandardDefence()));
+    rowPanel.getChildren().add(createIconWithText( (heavyIcon), stats.getHeavyDefence()));
+    rowPanel.getChildren().add(createIconWithText( (lightIcon), stats.getLightDefence()));
 
-    rowPanel.render(graphics);
 }
 
     private PanelComponent createIconWithText(BufferedImage icon, String text)
     {
         PanelComponent iconWithTextPanel = new PanelComponent();
-        iconWithTextPanel.setPreferredSize(new Dimension(50, 60));
         iconWithTextPanel.setOrientation(ComponentOrientation.VERTICAL);
-        iconWithTextPanel.setGap(new java.awt.Point(0, 2));  // Add vertical gap between icon and text
-        iconWithTextPanel.setBackgroundColor(null);
-
-        // Add icon
-        iconWithTextPanel.getChildren().add(new ImageComponent(icon));
-
-        // Add text
-        iconWithTextPanel.getChildren().add(LineComponent.builder().left(text).build());
+        iconWithTextPanel.setBorder(new Rectangle(2,2,34,50)); //set border of individual icon/value pair
+        iconWithTextPanel.setGap(new java.awt.Point(0, 3));  // Add vertical gap between icon and text
+        iconWithTextPanel.getChildren().add(new ImageComponent(icon)); //add icon
+        LineComponent valueLine = LineComponent.builder().left(" ").right("").left(text).build();
+        iconWithTextPanel.getChildren().add(valueLine);
 
         return iconWithTextPanel;
-    }
-
-    private BufferedImage resizeImage(BufferedImage image)
-    {
-        BufferedImage resizedImage = new BufferedImage(IMAGE_SIZE.width, IMAGE_SIZE.height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(image, 0, 0, IMAGE_SIZE.width, IMAGE_SIZE.height, null);
-        g.dispose();
-        return resizedImage;
     }
 
 }

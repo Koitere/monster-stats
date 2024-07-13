@@ -2,8 +2,6 @@ package com.monsterstats;
 
 import javax.inject.Inject;
 import javax.swing.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 import com.google.inject.Provides;
 import net.runelite.api.*;
@@ -22,7 +20,7 @@ import net.runelite.client.util.ImageUtil;
 @PluginDescriptor(
 		name = "Monster Stats",
 		description = "Shows monster stats with search functionality",
-		tags = {"npc", "stats"}
+		tags = {"npc", "stats", "tooltip", "search", "defensive", "defence", "weakness", "elemental", "weaknesses"}
 )
 public class MonsterStatsPlugin extends Plugin
 {
@@ -82,35 +80,23 @@ public class MonsterStatsPlugin extends Plugin
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		if (config.showStatsMenuOption() && event.getType() == MenuAction.NPC_SECOND_OPTION.getId() && event.getTarget() != null)
+		if (config.showStatsMenuOption() && event.getType() == MenuAction.NPC_SECOND_OPTION.getId() && event.getTarget() != null) //Add Stats option to right clicked NPCs
 		{
-			boolean alreadyHasStatsOption = false;
-			for (MenuEntry entry : client.getMenuEntries())
-			{
-				if (entry.getOption().equals(STATS_OPTION))
-				{
-					alreadyHasStatsOption = true;
-					break;
-				}
-			}
+			client.createMenuEntry(client.getMenuEntries().length)
+					.setOption(STATS_OPTION)
+					.setTarget(event.getTarget())
+					.setIdentifier(event.getIdentifier())
+					.setType(MenuAction.RUNELITE)
+					.setParam0(event.getActionParam0())
+					.setParam1(event.getActionParam1());
 
-			if (!alreadyHasStatsOption)
-			{
-				client.createMenuEntry(client.getMenuEntries().length)
-						.setOption(STATS_OPTION)
-						.setTarget(event.getTarget())
-						.setIdentifier(event.getIdentifier())
-						.setType(MenuAction.RUNELITE)
-						.setParam0(event.getActionParam0())
-						.setParam1(event.getActionParam1());
-			}
 		}
-		if (config.shiftForTooltip() && !client.isKeyPressed(KeyCode.KC_SHIFT))
+		if (config.shiftForTooltip() && !client.isKeyPressed(KeyCode.KC_SHIFT)) //don't add tooltip if shift for tooltip is on
 		{
 			hoveredNPC = null;
 			return;
 		}
-		if (config.showHoverTooltip())
+		if (config.showHoverTooltip()) //if hovering, tooltips are on, and shift for tooltip isn't on then show tooltip.
 		{
 			MenuEntry entry = event.getMenuEntry();
             hoveredNPC = entry.getNpc();
@@ -123,26 +109,18 @@ public class MonsterStatsPlugin extends Plugin
 		if (event.getMenuOption().equals(STATS_OPTION))
 		{
 			clientThread.invoke(() -> {
-				String npcName = extractNpcName(event.getMenuTarget());
-				if (npcName != null)
+				NPC clickedNPC = client.getCachedNPCs()[event.getId()]; //get the NPC from the MenuOptionClicked event id
+				if (clickedNPC != null)
 				{
-					monsterStatsPanel.search(npcName, true);
+					NPCStats npcStats = NPCDataLoader.getIDStats(clickedNPC.getId());
+					if (npcStats.getName().contains("#")) { //if the name contains a '#' it has alternate forms and we will select this alt form.
+						monsterStatsPanel.search(npcStats.getSearchName(), true, npcStats.getName().split("#",2)[1]);
+					} else { //otherwise we just select the default of that monster.
+						monsterStatsPanel.search(npcStats.getSearchName(), true, "");
+					}
 					SwingUtilities.invokeLater(() -> clientToolbar.openPanel(navButton)); // Ensure the panel is opened on EDT
 				}
 			});
 		}
 	}
-
-	private String extractNpcName(String target)
-	{
-		// Regular expression to find the text from menu target string
-		Pattern pattern = Pattern.compile("<col=[0-9a-fA-F]+>([^<]+)<col=[0-9a-fA-F]+>");
-		Matcher matcher = pattern.matcher(target);
-		if (matcher.find())
-		{
-			return matcher.group(1);
-		}
-		return null;
-	}
-
 }
