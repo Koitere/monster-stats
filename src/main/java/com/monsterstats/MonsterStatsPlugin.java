@@ -109,7 +109,7 @@ public class MonsterStatsPlugin extends Plugin
 		if (event.getMenuOption().equals(STATS_OPTION))
 		{
 			clientThread.invoke(() -> {
-				NPC clickedNPC = client.getCachedNPCs()[event.getId()]; //get the NPC from the MenuOptionClicked event id
+				NPC clickedNPC = client.getTopLevelWorldView().npcs().byIndex(event.getId()); //get the NPC from the MenuOptionClicked event id
 				if (clickedNPC != null)
 				{
 					NPCStats npcStats = NPCDataLoader.getIDStats(clickedNPC.getId());
