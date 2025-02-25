@@ -33,7 +33,7 @@ public class NPCDataCleaner {
                 result.add(Integer.parseInt(part.trim()));
             } catch (NumberFormatException e) {
                 // Handle the case where part is not a valid integer
-                log.warn("Invalid number format in NPC IDs: " + part, e);
+                log.debug("Invalid number format in NPC IDs: " + part, e);
             }
         }
         return result;
