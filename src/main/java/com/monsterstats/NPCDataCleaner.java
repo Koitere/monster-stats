@@ -30,7 +30,8 @@ public class NPCDataCleaner {
                 result.add(Integer.parseInt(part.trim()));
             } catch (NumberFormatException e) {
                 // Handle the case where part is not a valid integer
-                System.err.println("Invalid number format: " + part);
+                //System.err.println("Invalid number format: " + part);
+                //For debug use when updating database.
             }
         }
         return result;
