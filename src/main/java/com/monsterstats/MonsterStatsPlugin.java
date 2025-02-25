@@ -6,7 +6,6 @@ import javax.swing.*;
 import com.google.inject.Provides;
 import net.runelite.api.*;
 import net.runelite.api.events.MenuOptionClicked;
-import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -35,9 +34,6 @@ public class MonsterStatsPlugin extends Plugin
 
 	@Inject
 	private MonsterStatsConfig config;
-
-	@Inject
-	private ClientThread clientThread;
 
 	@Inject
 	private ClientToolbar clientToolbar;
@@ -108,19 +104,17 @@ public class MonsterStatsPlugin extends Plugin
 	{
 		if (event.getMenuOption().equals(STATS_OPTION))
 		{
-			clientThread.invoke(() -> {
-				NPC clickedNPC = client.getTopLevelWorldView().npcs().byIndex(event.getId()); //get the NPC from the MenuOptionClicked event id
-				if (clickedNPC != null)
-				{
-					NPCStats npcStats = NPCDataLoader.getIDStats(clickedNPC.getId());
-					if (npcStats.getName().contains("#")) { //if the name contains a '#' it has alternate forms and we will select this alt form.
-						monsterStatsPanel.search(npcStats.getSearchName(), true, npcStats.getName().split("#",2)[1]);
-					} else { //otherwise we just select the default of that monster.
-						monsterStatsPanel.search(npcStats.getSearchName(), true, "");
-					}
-					SwingUtilities.invokeLater(() -> clientToolbar.openPanel(navButton)); // Ensure the panel is opened on EDT
+			NPC clickedNPC = event.getMenuEntry().getNpc();
+			if (clickedNPC != null)
+			{
+				NPCStats npcStats = NPCDataLoader.getIDStats(clickedNPC.getId());
+				if (npcStats.getName().contains("#")) { //if the name contains a '#' it has alternate forms and we will select this alt form.
+					monsterStatsPanel.search(npcStats.getSearchName(), true, npcStats.getName().split("#",2)[1]);
+				} else { //otherwise we just select the default of that monster.
+					monsterStatsPanel.search(npcStats.getSearchName(), true, "");
 				}
-			});
+				SwingUtilities.invokeLater(() -> clientToolbar.openPanel(navButton)); // Ensure the panel is opened on EDT
+			}
 		}
 	}
 }

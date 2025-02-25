@@ -1,8 +1,11 @@
 package com.monsterstats;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class NPCDataCleaner {
 
     public static String cleanData(String start) {
@@ -30,8 +33,7 @@ public class NPCDataCleaner {
                 result.add(Integer.parseInt(part.trim()));
             } catch (NumberFormatException e) {
                 // Handle the case where part is not a valid integer
-                //System.err.println("Invalid number format: " + part);
-                //For debug use when updating database.
+                log.debug("Invalid number format in NPC IDs: " + part, e);
             }
         }
         return result;
