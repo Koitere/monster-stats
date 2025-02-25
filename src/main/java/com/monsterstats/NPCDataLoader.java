@@ -1,5 +1,7 @@
 package com.monsterstats;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class NPCDataLoader {
 
     private static final String CSV_FILE = "/monsterdata.csv";
@@ -17,7 +20,7 @@ public class NPCDataLoader {
     static {
         try (InputStream inputStream = NPCDataLoader.class.getResourceAsStream(CSV_FILE)) {
             if (inputStream == null) {
-                System.err.println("Could not find file: " + CSV_FILE);
+                log.warn("Could not find file: {}", CSV_FILE);
             } else {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
                     String line;
@@ -71,7 +74,7 @@ public class NPCDataLoader {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("Failed to read monster data", e);
         }
     }
 
