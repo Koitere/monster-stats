@@ -27,7 +27,7 @@ public class NPCDataLoader {
                     while ((line = reader.readLine()) != null) {
                         String[] fields = parseCSVLine(line);
                         boolean hasAltForms = false;
-                        if (fields.length < 11) {
+                        if (fields.length < 13) {
                             // Fill missing fields with '?'
                             fields = fillMissingFields(fields);
                         }
@@ -56,14 +56,17 @@ public class NPCDataLoader {
                         String heavyDefence = NPCDataCleaner.cleanData(fields[8]);
                         String lightDefence = NPCDataCleaner.cleanData(fields[9]);
 
+                        List<String> maxHits = NPCDataCleaner.parseNPCStringList(fields[11]);
+                        List<String> attackStyle = NPCDataCleaner.parseNPCStringList(fields[12]);
+
 
                         if (!npcIDs.isEmpty()) {
                             for (Integer id : npcIDs) { //create a new NPC object for each npc id with their realName, then we use the prefix of realName to find the main object in our other Map
-                                NPCStats npcStats = new NPCStats(realName, name, elementalWeakness, elementalPercent, crushDefence, stabDefence, slashDefence, standardDefence, heavyDefence, lightDefence, magicDefence, id, hasAltForms);
+                                NPCStats npcStats = new NPCStats(realName, name, elementalWeakness, elementalPercent, crushDefence, stabDefence, slashDefence, standardDefence, heavyDefence, lightDefence, magicDefence, id, hasAltForms, maxHits, attackStyle);
                                 npcIDData.put(id, npcStats); //add to the map the id to this npcStats object. We add the full data because for mouseover tooltips we can use the data here and not search the other map.
                             }
                         }
-                        NPCStats npcStats = new NPCStats(realName, name, elementalWeakness, elementalPercent, crushDefence, stabDefence, slashDefence, standardDefence, heavyDefence, lightDefence, magicDefence, npcIDs.get(0), hasAltForms);
+                        NPCStats npcStats = new NPCStats(realName, name, elementalWeakness, elementalPercent, crushDefence, stabDefence, slashDefence, standardDefence, heavyDefence, lightDefence, magicDefence, npcIDs.get(0), hasAltForms, maxHits, attackStyle);
                         if (hasAltForms && npcData.containsKey(name)) { //if this monster has alternate forms with different stats and the data entry already exists
                             npcData.get(name).addForm(npcStats); //we then add this data to the base entry in alternate forms
                         } else {
@@ -79,8 +82,8 @@ public class NPCDataLoader {
     }
 
     private static String[] fillMissingFields(String[] fields) {
-        String[] result = new String[11];
-        for (int i = 0; i < 11; i++) {
+        String[] result = new String[13];
+        for (int i = 0; i < 13; i++) {
             if (i < fields.length) {
                 result[i] = fields[i];
             } else {

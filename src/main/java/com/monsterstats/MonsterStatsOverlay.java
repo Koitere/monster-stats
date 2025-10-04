@@ -35,6 +35,7 @@ public class MonsterStatsOverlay extends Overlay
     final BufferedImage airIcon;
     final BufferedImage earthIcon;
     final BufferedImage maxHitIcon;
+    final BufferedImage attackStyleIcon;
 
     @Inject
     MonsterStatsOverlay(MonsterStatsPlugin plugin, Client client, TooltipManager tooltipManager)
@@ -57,6 +58,7 @@ public class MonsterStatsOverlay extends Overlay
         airIcon = ImageUtil.loadImageResource(getClass(), "/Air_rune.png");
         earthIcon = ImageUtil.loadImageResource(getClass(), "/Earth_rune.png");
         maxHitIcon = ImageUtil.loadImageResource(getClass(), "/Damage_hitsplat_(max_hit).png");
+        attackStyleIcon = ImageUtil.loadImageResource(getClass(), "/Combat_icon.png");
     }
 
     public BufferedImage getElementalWeaknessIcon(String elementalWeakness)

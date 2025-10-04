@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +26,8 @@ public class MonsterStatsPanel extends PluginPanel
     private final JPanel buttonPanel;
     private final JPanel maxHitTitlePanel;
     private final JPanel maxHitListPanel;
+    private final JPanel attackStyleTitlePanel;
+    private final JPanel attackStyleListPanel;
     private final JTextPane monsterTextPane;
     private final MonsterStatsOverlay monsterStatsOverlay;
 
@@ -131,39 +132,22 @@ public class MonsterStatsPanel extends PluginPanel
         JScrollPane buttonPane = new JScrollPane(buttonPanel);
         buttonPane.setPreferredSize(new Dimension(100, 100));
 
-        //Panel to hold the max hit components (title and list)
-        JPanel maxHitPanel = new JPanel();
-
         //Building the max hit title panel
         maxHitTitlePanel = new JPanel();
-        maxHitTitlePanel.setLayout(new BoxLayout(maxHitTitlePanel, BoxLayout.X_AXIS));
-        maxHitTitlePanel.setBorder(new EmptyBorder(5,5,5,5));
-        maxHitTitlePanel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
-        maxHitTitlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        maxHitTitlePanel.setPreferredSize(new Dimension(200,50));
-
-        JLabel maxHitLabel = new JLabel("Max Hit");
-        maxHitLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        maxHitTitlePanel.add(new JLabel(new ImageIcon(monsterStatsOverlay.maxHitIcon)));
-        maxHitTitlePanel.add(Box.createRigidArea(new Dimension(5, 0)));
-        maxHitTitlePanel.add(maxHitLabel);
-        maxHitTitlePanel.add(Box.createRigidArea(new Dimension(5, 0)));
-        maxHitTitlePanel.add(new JLabel(new ImageIcon(monsterStatsOverlay.maxHitIcon)));
+        buildTitlePanel(maxHitTitlePanel, "Max Hit", new ImageIcon(monsterStatsOverlay.maxHitIcon));
 
         //Building the max hit list panel
         maxHitListPanel = new JPanel();
-        maxHitListPanel.setLayout(new BoxLayout(maxHitListPanel, BoxLayout.Y_AXIS));
-        maxHitListPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-        maxHitListPanel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+        JScrollPane maxHitScrollPane = buildListPanel(maxHitListPanel);
 
-        JScrollPane maxHitScrollPane = new JScrollPane(maxHitListPanel);
-        maxHitScrollPane.setPreferredSize(new Dimension(300, 40)); // Shows about 2 entries
-        maxHitScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        maxHitScrollPane.setBorder(null);
 
-        //Add individual max hit components to max hit panel
-        //maxHitPanel.add(maxHitTitlePanel);
-        //maxHitPanel.add(maxHitScrollPane);
+        //build attack style title panel
+        attackStyleTitlePanel = new JPanel();
+        buildTitlePanel(attackStyleTitlePanel, "Attack Style", new ImageIcon(monsterStatsOverlay.attackStyleIcon));
+
+        //build attack style list panel
+        attackStyleListPanel = new JPanel();
+        JScrollPane attackStyleScrollPane = buildListPanel(attackStyleListPanel);
 
         //Adding everything to main center panel
         centerPanel.add(resultsScrollPane);
@@ -177,6 +161,10 @@ public class MonsterStatsPanel extends PluginPanel
         centerPanel.add(maxHitTitlePanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(maxHitScrollPane);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(attackStyleTitlePanel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(attackStyleScrollPane);
 
         add(centerPanel, BorderLayout.CENTER);
 
@@ -264,7 +252,7 @@ public class MonsterStatsPanel extends PluginPanel
         statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
         statsPanel.setBorder(new EmptyBorder(5,5,5,5));
         statsPanel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
-        addSectionTitle(statsPanel, "Melee Defence");
+        addSectionSubTitle(statsPanel, "Melee Defence");
         addVerticalSpacing(statsPanel);
         assert selectedStats != null;
         addIconsAndValues(statsPanel, new BufferedImage[]{monsterStatsOverlay.stabIcon, monsterStatsOverlay.crushIcon, monsterStatsOverlay.slashIcon},
@@ -272,7 +260,7 @@ public class MonsterStatsPanel extends PluginPanel
 
         addVerticalSpacing(statsPanel);
 
-        addSectionTitle(statsPanel, "Magic Defence");
+        addSectionSubTitle(statsPanel, "Magic Defence");
         addVerticalSpacing(statsPanel);
 
         BufferedImage elementalWeakness;
@@ -283,7 +271,7 @@ public class MonsterStatsPanel extends PluginPanel
 
         addVerticalSpacing(statsPanel);
 
-        addSectionTitle(statsPanel, "Ranged Defence");
+        addSectionSubTitle(statsPanel, "Ranged Defence");
         addVerticalSpacing(statsPanel);
         addIconsAndValues(statsPanel, new BufferedImage[]{monsterStatsOverlay.standardIcon, monsterStatsOverlay.heavyIcon, monsterStatsOverlay.lightIcon},
                 new String[]{selectedStats.getStandardDefence(), selectedStats.getHeavyDefence(), selectedStats.getLightDefence()});
@@ -292,25 +280,56 @@ public class MonsterStatsPanel extends PluginPanel
         monsterTextPane.setText(selectedStats.getSearchName());
 
         maxHitListPanel.removeAll();
-        List<String> maxHits = new ArrayList<>();
-        maxHits.add("20");
-        maxHits.add("30");// e.g., ["20 (melee)", "30 (magic)", ...]
-        maxHits.add("40");
-        maxHits.add("50");
-        maxHits.add("60 (Dragonfire)");
+        addListItems(maxHitListPanel,selectedStats.getMaxHits());
 
-        for (String hit : maxHits)
-        {
-            JLabel hitLabel = new JLabel(hit);
-            hitLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            hitLabel.setBorder(new EmptyBorder(2, 5, 2, 5));
-            hitLabel.setHorizontalAlignment(SwingConstants.CENTER); // Align text inside label
-            hitLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            maxHitListPanel.add(hitLabel);
-        }
+        attackStyleListPanel.removeAll();
+        addListItems(attackStyleListPanel,selectedStats.getAttackStyles());
 
         revalidate();
         repaint();
+    }
+
+    private void addListItems(JPanel listSection, List<String> listItems) //populate a JPanel with list items
+    {
+        for (String item : listItems)
+        {
+            JLabel itemLabel = new JLabel(item);
+            itemLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+            itemLabel.setBorder(new EmptyBorder(2, 5, 2, 5));
+            itemLabel.setHorizontalAlignment(SwingConstants.CENTER); // Align text inside label
+            itemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            listSection.add(itemLabel);
+        }
+    }
+
+    private void buildTitlePanel(JPanel panel, String title, ImageIcon icon) //adds individual title sections for other stats
+    {
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.setBorder(new EmptyBorder(5,5,5,5));
+        panel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.setPreferredSize(new Dimension(400,50));
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        panel.add(new JLabel(icon));
+        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel.add(titleLabel);
+        panel.add(Box.createRigidArea(new Dimension(5, 0)));
+        panel.add(new JLabel(icon));
+    }
+
+    private JScrollPane buildListPanel(JPanel panel)
+    {
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        panel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+
+        JScrollPane listScrollPane = new JScrollPane(panel);
+        listScrollPane.setPreferredSize(new Dimension(300, 100)); // Shows about 2 entries
+        listScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        listScrollPane.setBorder(null);
+        return listScrollPane;
     }
 
     private void addVerticalSpacing(JPanel panel)
@@ -318,7 +337,7 @@ public class MonsterStatsPanel extends PluginPanel
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
     }
 
-    private void addIconsAndValues(JPanel panel, BufferedImage[] icons, String[] values)
+    private void addIconsAndValues(JPanel panel, BufferedImage[] icons, String[] values) //Adds stat values with corresponding stat icons
     {
         JPanel iconsAndValuesPanel = new JPanel();
         iconsAndValuesPanel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
@@ -339,7 +358,7 @@ public class MonsterStatsPanel extends PluginPanel
         panel.add(iconsAndValuesPanel);
     }
 
-    private void addSectionTitle(JPanel panel, String text)
+    private void addSectionSubTitle(JPanel panel, String text) //adds sub titles to the stats section
     {
         JLabel titleLabel = new JLabel(text);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 14));
