@@ -6,9 +6,6 @@ The Monster Stats Plugin provides a quick way to access the defensive stats of N
 
 Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
 
-## TODO
-- Allow stat checking for monsters that may not have combat levels but still have stats (e.g. implings)
-
 ## Features
 
 - **Hover Tooltip**: Toggle-able tooltip that displays elemental weaknesses and percentages as well as defensive stats for all styles. Compatible with other tooltips (like Runelite's Mouse Tooltips Plugin)
@@ -19,7 +16,9 @@ Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
  ![image](https://github.com/Koitere/monster-stats/assets/48294933/cc73c955-01e5-40d5-bd4f-07ddaed1a24e)
  
 - **Search Functionality**: Allows users to search for specific NPCs and view their defensive stats in the sidebar. Support for selecting alternate variants/forms of monsters by searching for the monster and using the variant buttons.
- ![image](https://github.com/user-attachments/assets/3619434c-dd66-45af-81da-2144ec056e78)
+<img width="305" height="1504" alt="image" src="https://github.com/user-attachments/assets/591fb612-2806-42c2-8c3d-8b09db7ba31d" />
+
+
 
 ## Configuration Options
 
@@ -35,11 +34,22 @@ Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
   - **Description**: Display the hover tooltip only when the Shift key is held.
   - **Default**: Enabled
 
+- **Enable Side Panel**
+  - **Description**: Enables the searchable side panel to display more monster stats.
+  - **Default**: Enabled
+
 ## Disclaimer
 
 Please note that this plugin is still in development. Some features may not work as expected, and there may be occasional bugs or performance issues. We appreciate your feedback and patience as we continue to improve the plugin.
 
 ## Change Log
+
+### Version 1.2.0
+- Improved functionalityL
+  - Added displaying of maximum hits for monsters in the database
+  - Added displaying of attack style for monsters in the database
+  - Improved database population for quicker updating in the future
+  - Added ability to enable/disable the side bar panel
 
 ### Version 1.1.0
 - Improvements and Bug Fixes:
