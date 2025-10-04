@@ -14,13 +14,14 @@ import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.client.util.ImageUtil;
 
 @PluginDescriptor(
 		name = "Monster Stats",
-		description = "Shows monster stats with search functionality",
-		tags = {"npc", "stats", "tooltip", "search", "defensive", "defence", "weakness", "elemental", "weaknesses"}
+		description = "Shows monster stats and other info with search functionality",
+		tags = {"npc", "stats", "tooltip", "search", "defensive", "defence", "weakness", "elemental", "weaknesses", "bestiary", "monsters", "wiki"}
 )
 public class MonsterStatsPlugin extends Plugin
 {
@@ -35,6 +36,9 @@ public class MonsterStatsPlugin extends Plugin
 
 	@Inject
 	private MonsterStatsConfig config;
+
+	@Inject
+	private ConfigManager configManager;
 
 	@Inject
 	private ClientThread clientThread;
@@ -58,15 +62,10 @@ public class MonsterStatsPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		overlayManager.add(monsterStatsOverlay);
-		monsterStatsPanel = new MonsterStatsPanel(monsterStatsOverlay, ImageUtil.loadImageResource(getClass(),"/icon.png"));
 
-		navButton = NavigationButton.builder()
-				.tooltip("Monster Stats")
-				.icon(ImageUtil.loadImageResource(getClass(),"/icon.png"))
-				.panel(monsterStatsPanel)
-				.build();
-
-		clientToolbar.addNavigation(navButton);
+		if (config.enableSidePanel()) {
+			addNavBar();
+		}
 	}
 
 	@Override
@@ -77,10 +76,44 @@ public class MonsterStatsPlugin extends Plugin
 		monsterStatsPanel = null;
 	}
 
+	public void addNavBar() {
+		monsterStatsPanel = new MonsterStatsPanel(monsterStatsOverlay, ImageUtil.loadImageResource(getClass(),"/icon.png"));
+		navButton = NavigationButton.builder()
+				.tooltip("Monster Stats")
+				.icon(ImageUtil.loadImageResource(getClass(),"/icon.png"))
+				.panel(monsterStatsPanel)
+				.build();
+
+		clientToolbar.addNavigation(navButton);
+	}
+
+	public void removeNavBar()
+	{
+		if (navButton != null && monsterStatsPanel != null) {
+			clientToolbar.removeNavigation(navButton);
+			navButton = null;
+			monsterStatsPanel = null;
+		}
+	}
+
+	@Subscribe()
+	public void onConfigChanged(ConfigChanged event) { //remove the nav button if the side panel gets disabled
+		String configName = event.getKey();
+		if (configName.equals("enableSidePanel")) {
+			boolean enableSidePanel = Boolean.parseBoolean(event.getNewValue());
+			if (enableSidePanel && navButton == null && monsterStatsPanel == null) {
+				addNavBar();
+			} else {
+				removeNavBar();
+				configManager.setConfiguration("monsterstats", "showStatsMenuOption", false); //also disable the right click menu, as this relies on side panel.
+			}
+		}
+	}
+
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		if (config.showStatsMenuOption() && event.getType() == MenuAction.NPC_SECOND_OPTION.getId() && event.getTarget() != null) //Add Stats option to right clicked NPCs
+		if (config.enableSidePanel() && config.showStatsMenuOption() && event.getType() == MenuAction.NPC_SECOND_OPTION.getId() && event.getTarget() != null) //Add Stats option to right clicked NPCs
 		{
 			client.createMenuEntry(client.getMenuEntries().length)
 					.setOption(STATS_OPTION)

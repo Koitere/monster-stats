@@ -10,7 +10,7 @@ public interface MonsterStatsConfig extends Config
     @ConfigItem(
             keyName = "showStatsMenuOption",
             name = "Show Stats Menu Option",
-            description = "Enable right-click 'Stats' option for NPCs"
+            description = "Enable right-click 'Stats' option for NPCs, side panel must also be enabled."
     )
     default boolean showStatsMenuOption()
     {
@@ -20,7 +20,7 @@ public interface MonsterStatsConfig extends Config
     @ConfigItem(
             keyName = "showHoverTooltip",
             name = "Show Hover Tooltip",
-            description = "Show a tooltip with elemental weakness and weakness percent when hovering over monsters"
+            description = "Show a tooltip with elemental weakness and weakness percent when hovering over monsters."
     )
     default boolean showHoverTooltip()
     {
@@ -36,4 +36,11 @@ public interface MonsterStatsConfig extends Config
     {
         return true;
     }
+
+    @ConfigItem(
+            keyName = "enableSidePanel",
+            name = "Enable Side Panel",
+            description = "Enables the searchable side panel to display more monster stats."
+    )
+    default boolean enableSidePanel() { return true; }
 }

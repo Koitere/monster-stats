@@ -15,6 +15,22 @@ public class NPCDataCleaner {
         return getFirstValue(start.replace("\"", "").trim());
     }
 
+    public static List<String> parseNPCStringList(String input) {
+        List<String> result = new ArrayList<>();
+        if (input == null || input.isEmpty() || input.equals("?")) {
+            result.add("No Data");
+            return result;
+        }
+        if (input.charAt(0) =='\"') {
+            input = input.split("\"", 2)[1];
+        }
+        String[] parts = input.split(",");
+        for (String part : parts) {
+            result.add(part.trim());
+        }
+        return result;
+    }
+
     public static List<Integer> parseNPCIDs(String input) {
         List<Integer> result = new ArrayList<>();
         if (input == null || input.isEmpty() || input.equals("?")) {
@@ -34,6 +50,9 @@ public class NPCDataCleaner {
             } catch (NumberFormatException e) {
                 // Handle the case where part is not a valid integer
                 log.debug("Invalid number format in NPC IDs: " + part, e);
+                List<Integer> invalidResult = new ArrayList<>();
+                invalidResult.add(-1);
+                return invalidResult;
             }
         }
         return result;
