@@ -99,7 +99,8 @@ public class MonsterStatsPlugin extends Plugin
 	@Subscribe()
 	public void onConfigChanged(ConfigChanged event) { //remove the nav button if the side panel gets disabled
 		String configName = event.getKey();
-		if (configName.equals("enableSidePanel")) {
+		String configGroup = event.getGroup();
+		if (configName.equals("enableSidePanel") && configGroup.equals("monsterstats")) {
 			boolean enableSidePanel = Boolean.parseBoolean(event.getNewValue());
 			if (enableSidePanel && navButton == null && monsterStatsPanel == null) {
 				addNavBar();
