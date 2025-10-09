@@ -42,6 +42,8 @@ Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
 
 Please note that this plugin is still in development. Some features may not work as expected, and there may be occasional bugs or performance issues. We appreciate your feedback and patience as we continue to improve the plugin.
 
+If you enjoy the plugin and feel like being generous, feel free to buy me a coffee! https://buymeacoffee.com/koitere
+
 ## Change Log
 
 ### Version 1.2.0
