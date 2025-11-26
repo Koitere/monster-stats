@@ -46,6 +46,12 @@ If you enjoy the plugin and feel like being generous, feel free to buy me a coff
 
 ## Change Log
 
+### Version 1.2.1
+- Added function
+  - Added flat armour stat for display
+  - No longer add 'Stats' menu option for NPCs with no stats available
+  - Added ability to view tooltips while sailing
+
 ### Version 1.2.0
 - Improved functionalityL
   - Added displaying of maximum hits for monsters in the database
