@@ -2,7 +2,6 @@ package com.monsterstats;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -24,8 +23,9 @@ public class NPCStats {
     private final List<String> attackStyles;
     private final Integer npcID;
     private final Map<String, NPCStats> altForms = new HashMap<>();
+    private final String flatArmour;
 
-    public NPCStats(String name, String searchName, String elementalWeakness, String elementalPercent, String crushDefence, String stabDefence, String slashDefence, String standardDefence, String heavyDefence, String lightDefence, String magicDefence, Integer npcID, boolean alt, List<String> maxHits, List<String> attackStyles) {
+    public NPCStats(String name, String searchName, String elementalWeakness, String elementalPercent, String crushDefence, String stabDefence, String slashDefence, String standardDefence, String heavyDefence, String lightDefence, String magicDefence, Integer npcID, boolean alt, List<String> maxHits, List<String> attackStyles, String flatArmour) {
         this.name = name;
         this.searchName = searchName;
         this.elementalWeakness = elementalWeakness;
@@ -44,6 +44,7 @@ public class NPCStats {
         }
         this.maxHits = maxHits;
         this.attackStyles = attackStyles;
+        this.flatArmour = flatArmour;
     }
 
     public void addForm(NPCStats altForm) {

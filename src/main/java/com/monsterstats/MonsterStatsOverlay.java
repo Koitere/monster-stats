@@ -36,6 +36,7 @@ public class MonsterStatsOverlay extends Overlay
     final BufferedImage earthIcon;
     final BufferedImage maxHitIcon;
     final BufferedImage attackStyleIcon;
+    final BufferedImage flatArmourIcon;
 
     @Inject
     MonsterStatsOverlay(MonsterStatsPlugin plugin, Client client, TooltipManager tooltipManager)
@@ -59,6 +60,7 @@ public class MonsterStatsOverlay extends Overlay
         earthIcon = ImageUtil.loadImageResource(getClass(), "/Earth_rune.png");
         maxHitIcon = ImageUtil.loadImageResource(getClass(), "/Damage_hitsplat_(max_hit).png");
         attackStyleIcon = ImageUtil.loadImageResource(getClass(), "/Combat_icon.png");
+        flatArmourIcon = ImageUtil.loadImageResource(getClass(), "/Defence_icon.png");
     }
 
     public BufferedImage getElementalWeaknessIcon(String elementalWeakness)
@@ -97,6 +99,10 @@ public class MonsterStatsOverlay extends Overlay
             {
                 return true;
             }
+            else if (MenuAction.SET_HEADING.equals(menuEntries[i].getType())) //check if player is actively on helm (sailing) and has mouse on game scene
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -124,7 +130,7 @@ private void renderTooltip(Graphics2D graphics, NPCStats stats)
     PanelComponent rowPanel = new PanelComponent();
     rowPanel.setPreferredLocation(new java.awt.Point(mousePosition.getX(), mousePosition.getY()));
     rowPanel.setOrientation(ComponentOrientation.HORIZONTAL);
-    rowPanel.setBorder(new Rectangle(2,2,305,55)); //Set border of resulting tooltip
+    rowPanel.setBorder(new Rectangle(2,2,340,55)); //Set border of resulting tooltip
     rowPanel.setGap(new java.awt.Point(2, 0));  // Add horizontal gap between components
 
     tooltipManager.addFront(new Tooltip(rowPanel));
@@ -136,6 +142,7 @@ private void renderTooltip(Graphics2D graphics, NPCStats stats)
     rowPanel.getChildren().add(createIconWithText( (standardIcon), stats.getStandardDefence()));
     rowPanel.getChildren().add(createIconWithText( (heavyIcon), stats.getHeavyDefence()));
     rowPanel.getChildren().add(createIconWithText( (lightIcon), stats.getLightDefence()));
+    rowPanel.getChildren().add(createIconWithText( (flatArmourIcon), stats.getFlatArmour()));
 
 }
 

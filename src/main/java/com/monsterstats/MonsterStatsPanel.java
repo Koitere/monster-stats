@@ -276,6 +276,12 @@ public class MonsterStatsPanel extends PluginPanel
         addIconsAndValues(statsPanel, new BufferedImage[]{monsterStatsOverlay.standardIcon, monsterStatsOverlay.heavyIcon, monsterStatsOverlay.lightIcon},
                 new String[]{selectedStats.getStandardDefence(), selectedStats.getHeavyDefence(), selectedStats.getLightDefence()});
 
+        addVerticalSpacing(statsPanel);
+
+        addSectionSubTitle(statsPanel, "Flat Armour");
+        addVerticalSpacing(statsPanel);
+        addIconsAndValues(statsPanel, new BufferedImage[]{monsterStatsOverlay.flatArmourIcon}, new String[]{selectedStats.getFlatArmour()});
+
         dataPanel.add(statsPanel);
         monsterTextPane.setText(selectedStats.getSearchName());
 

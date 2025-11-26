@@ -46,7 +46,7 @@ public class MonsterStatsPlugin extends Plugin
 	@Inject
 	private ClientToolbar clientToolbar;
 
-	NPC hoveredNPC;
+	NPC hoveredNPC = null;
 
 	private NavigationButton navButton;
 	private MonsterStatsPanel monsterStatsPanel;
@@ -116,6 +116,11 @@ public class MonsterStatsPlugin extends Plugin
 	{
 		if (config.enableSidePanel() && config.showStatsMenuOption() && event.getType() == MenuAction.NPC_SECOND_OPTION.getId() && event.getTarget() != null) //Add Stats option to right clicked NPCs
 		{
+			NPCStats checkExist = NPCDataLoader.getIDStats(event.getMenuEntry().getNpc().getId());
+			if (checkExist == null) { //if there is no valid entry in the database for this NPC, we will not add the Stats option.
+				hoveredNPC = null;
+				return;
+			}
 			client.createMenuEntry(client.getMenuEntries().length)
 					.setOption(STATS_OPTION)
 					.setTarget(event.getTarget())
@@ -123,7 +128,6 @@ public class MonsterStatsPlugin extends Plugin
 					.setType(MenuAction.RUNELITE)
 					.setParam0(event.getActionParam0())
 					.setParam1(event.getActionParam1());
-
 		}
 		if (config.shiftForTooltip() && !client.isKeyPressed(KeyCode.KC_SHIFT)) //don't add tooltip if shift for tooltip is on
 		{
@@ -132,6 +136,16 @@ public class MonsterStatsPlugin extends Plugin
 		}
 		if (config.showHoverTooltip()) //if hovering, tooltips are on, and shift for tooltip isn't on then show tooltip.
 		{
+			NPC currentNPC = event.getMenuEntry().getNpc(); //check if there is a valid NPC in this MenuEntry
+			if (currentNPC == null)
+			{
+				return;
+			}
+			NPCStats checkExist = NPCDataLoader.getIDStats(currentNPC.getId());
+			if (checkExist == null) { //if there is no valid entry in the database for this NPC, we will not add the hover tooltip.
+				hoveredNPC = null;
+				return;
+			}
 			MenuEntry entry = event.getMenuEntry();
             hoveredNPC = entry.getNpc();
 		}
