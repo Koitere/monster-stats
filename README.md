@@ -6,6 +6,10 @@ The Monster Stats Plugin provides a quick way to access the defensive stats of N
 
 Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
 
+[![Active Installs](http://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/installs/plugin/monsterstats)](https://runelite.net/plugin-hub/show/monsterstats)
+[![Plugin Rank](http://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/rank/plugin/monsterstats)](https://runelite.net/plugin-hub/show/monsterstats)
+
+
 ## Features
 
 - **Hover Tooltip**: Toggle-able tooltip that displays elemental weaknesses and percentages as well as defensive stats for all styles. Compatible with other tooltips (like Runelite's Mouse Tooltips Plugin)
