@@ -24,8 +24,15 @@ public class NPCStats {
     private final Integer npcID;
     private final Map<String, NPCStats> altForms = new HashMap<>();
     private final String flatArmour;
+    private final String hitpoints;
+    private final String attackLevel;
+    private final String strengthLevel;
+    private final String defenceLevel;
+    private final String magicLevel;
+    private final String rangedLevel;
+    private final String attackSpeed;
 
-    public NPCStats(String name, String searchName, String elementalWeakness, String elementalPercent, String crushDefence, String stabDefence, String slashDefence, String standardDefence, String heavyDefence, String lightDefence, String magicDefence, Integer npcID, boolean alt, List<String> maxHits, List<String> attackStyles, String flatArmour) {
+    public NPCStats(String name, String searchName, String elementalWeakness, String elementalPercent, String crushDefence, String stabDefence, String slashDefence, String standardDefence, String heavyDefence, String lightDefence, String magicDefence, Integer npcID, boolean alt, List<String> maxHits, List<String> attackStyles, String flatArmour, String hitpoints, String attackLevel, String strengthLevel, String defenceLevel, String magicLevel, String rangedLevel, String attackSpeed) {
         this.name = name;
         this.searchName = searchName;
         this.elementalWeakness = elementalWeakness;
@@ -45,6 +52,13 @@ public class NPCStats {
         this.maxHits = maxHits;
         this.attackStyles = attackStyles;
         this.flatArmour = flatArmour;
+        this.hitpoints = hitpoints;
+        this.attackLevel = attackLevel;
+        this.strengthLevel = strengthLevel;
+        this.defenceLevel = defenceLevel;
+        this.magicLevel = magicLevel;
+        this.rangedLevel = rangedLevel;
+        this.attackSpeed = attackSpeed;
     }
 
     public void addForm(NPCStats altForm) {

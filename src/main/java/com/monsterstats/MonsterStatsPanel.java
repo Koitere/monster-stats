@@ -266,7 +266,7 @@ public class MonsterStatsPanel extends PluginPanel
         BufferedImage elementalWeakness;
         elementalWeakness = monsterStatsOverlay.getElementalWeaknessIcon(selectedStats.getElementalWeakness());
 
-        addIconsAndValues(statsPanel, new BufferedImage[]{monsterStatsOverlay.magicIcon, elementalWeakness},
+        addIconsAndValues(statsPanel, new BufferedImage[]{monsterStatsOverlay.magicDefenceIcon, elementalWeakness},
                 new String[]{selectedStats.getMagicDefence(), selectedStats.getElementalPercent() + "%"});
 
         addVerticalSpacing(statsPanel);
@@ -275,6 +275,15 @@ public class MonsterStatsPanel extends PluginPanel
         addVerticalSpacing(statsPanel);
         addIconsAndValues(statsPanel, new BufferedImage[]{monsterStatsOverlay.standardIcon, monsterStatsOverlay.heavyIcon, monsterStatsOverlay.lightIcon},
                 new String[]{selectedStats.getStandardDefence(), selectedStats.getHeavyDefence(), selectedStats.getLightDefence()});
+
+        addVerticalSpacing(statsPanel);
+
+        addSectionSubTitle(statsPanel, "Combat Stats");
+        addVerticalSpacing(statsPanel);
+        addIconsAndValues(statsPanel, new BufferedImage[]{monsterStatsOverlay.hitpointsIcon, monsterStatsOverlay.attackIcon, monsterStatsOverlay.strengthIcon, monsterStatsOverlay.defenceIcon},
+                new String[]{selectedStats.getHitpoints(), selectedStats.getAttackLevel(), selectedStats.getStrengthLevel(), selectedStats.getDefenceLevel()});
+        addIconsAndValues(statsPanel, new BufferedImage[]{monsterStatsOverlay.rangedIcon, monsterStatsOverlay.magicIcon, monsterStatsOverlay.flatArmourIcon, monsterStatsOverlay.attackSpeedIcon},
+                new String[]{selectedStats.getRangedLevel(), selectedStats.getMagicLevel(), selectedStats.getFlatArmour(), selectedStats.getAttackSpeed()});
 
         addVerticalSpacing(statsPanel);
 

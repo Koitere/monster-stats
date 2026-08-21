@@ -17,6 +17,14 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.client.util.ImageUtil;
+import net.runelite.client.chat.ChatMessageManager;
+import net.runelite.api.ChatMessageType;
+import net.runelite.api.events.ChatMessage;
+import net.runelite.client.chat.ChatColorType;
+import net.runelite.client.chat.ChatMessageBuilder;
+import net.runelite.client.chat.QueuedMessage;
+import net.runelite.client.input.KeyManager;
+import net.runelite.client.util.HotkeyListener;
 
 @PluginDescriptor(
 		name = "Monster Stats",
@@ -46,11 +54,19 @@ public class MonsterStatsPlugin extends Plugin
 	@Inject
 	private ClientToolbar clientToolbar;
 
+	@Inject
+	private ChatMessageManager chatMessageManager;
+
+	@Inject
+	private KeyManager keyManager;
+
 	NPC hoveredNPC = null;
 
 	private NavigationButton navButton;
 	private MonsterStatsPanel monsterStatsPanel;
 	private static final String STATS_OPTION = "Stats";
+	private int lastExaminedNpcId = -1;
+	private boolean modifierHeld = false;
 
 	@Provides
 	 MonsterStatsConfig provideConfig(ConfigManager configManager)
@@ -62,6 +78,7 @@ public class MonsterStatsPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		overlayManager.add(monsterStatsOverlay);
+		keyManager.registerKeyListener(modifierHotkeyListener);
 
 		if (config.enableSidePanel()) {
 			addNavBar();
@@ -72,6 +89,7 @@ public class MonsterStatsPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		overlayManager.remove(monsterStatsOverlay);
+		keyManager.unregisterKeyListener(modifierHotkeyListener);
 		clientToolbar.removeNavigation(navButton);
 		monsterStatsPanel = null;
 	}
@@ -129,7 +147,7 @@ public class MonsterStatsPlugin extends Plugin
 					.setParam0(event.getActionParam0())
 					.setParam1(event.getActionParam1());
 		}
-		if (config.shiftForTooltip() && !client.isKeyPressed(KeyCode.KC_SHIFT)) //don't add tooltip if shift for tooltip is on
+		if (config.shiftForTooltip() && !modifierHeld)
 		{
 			hoveredNPC = null;
 			return;
@@ -155,18 +173,72 @@ public class MonsterStatsPlugin extends Plugin
 	public void onMenuOptionClicked(MenuOptionClicked event) {
 		if (event.getMenuOption().equals(STATS_OPTION)) {
 			clientThread.invoke(() -> {
-				NPC clickedNPC = client.getTopLevelWorldView().npcs().byIndex(event.getId()); //get the NPC from the MenuOptionClicked event id
+				NPC clickedNPC = client.getTopLevelWorldView().npcs().byIndex(event.getId());
 				if (clickedNPC != null) {
 					NPCStats npcStats = NPCDataLoader.getIDStats(clickedNPC.getId());
-					if (npcStats.getName().contains("#")) { //if the name contains a '#' it has alternate forms and we will select this alt form.
+					if (npcStats.getName().contains("#")) {
 						monsterStatsPanel.search(npcStats.getSearchName(), true, npcStats.getName().split("#", 2)[1]);
-					} else { //otherwise we just select the default of that monster.
+					} else {
 						monsterStatsPanel.search(npcStats.getSearchName(), true, "");
 					}
-					SwingUtilities.invokeLater(() -> clientToolbar.openPanel(navButton)); // Ensure the panel is opened on EDT
+					SwingUtilities.invokeLater(() -> clientToolbar.openPanel(navButton));
 				}
 			});
+		}
 
+		if (event.getMenuAction() == MenuAction.EXAMINE_NPC) {
+			NPC examinedNPC = client.getTopLevelWorldView().npcs().byIndex(event.getId());
+			lastExaminedNpcId = examinedNPC != null ? examinedNPC.getId() : -1;
 		}
 	}
+
+	@Subscribe
+	public void onChatMessage(ChatMessage event) {
+		if (event.getType() != ChatMessageType.NPC_EXAMINE) {
+			return;
+		}
+		if (!config.showExamineChat() || lastExaminedNpcId == -1) {
+			return;
+		}
+
+		NPCStats stats = NPCDataLoader.getIDStats(lastExaminedNpcId);
+		lastExaminedNpcId = -1;
+
+		if (stats == null) {
+			return;
+		}
+
+		queueExamineLine(stats.getSearchName() + " — HP: " + stats.getHitpoints());
+		queueExamineLine("Melee Defence — Stab: " + stats.getStabDefence() + " | Slash: " + stats.getSlashDefence() + " | Crush: " + stats.getCrushDefence());
+		queueExamineLine("Magic Defence — Defence: " + stats.getMagicDefence() + " | Weakness: " + stats.getElementalWeakness() + " " + stats.getElementalPercent() + "%");
+		queueExamineLine("Ranged Defence — Standard: " + stats.getStandardDefence() + " | Heavy: " + stats.getHeavyDefence() + " | Light: " + stats.getLightDefence());
+	}
+
+	private void queueExamineLine(String text) {
+		String chatMessage = new ChatMessageBuilder()
+				.append(ChatColorType.HIGHLIGHT)
+				.append(text)
+				.build();
+
+		chatMessageManager.queue(
+				QueuedMessage.builder()
+						.type(ChatMessageType.CONSOLE)
+						.runeLiteFormattedMessage(chatMessage)
+						.build());
+	}
+
+	private final HotkeyListener modifierHotkeyListener = new HotkeyListener(() -> config.tooltipModifierKey())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			modifierHeld = true;
+		}
+
+		@Override
+		public void hotkeyReleased()
+		{
+			modifierHeld = false;
+		}
+	};
 }

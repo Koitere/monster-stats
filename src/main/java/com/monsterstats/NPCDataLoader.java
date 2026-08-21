@@ -16,7 +16,7 @@ public class NPCDataLoader {
     private static final String CSV_FILE = "/monsterdata.csv";
     private static final Map<String, NPCStats> npcData = new HashMap<>();
     private static final Map<Integer, NPCStats> npcIDData = new HashMap<>();
-    private static final Integer numFields = 14; //amount of fields we are loading in for ease of future changes
+    private static final Integer numFields = 21; //amount of fields we are loading in for ease of future changes
 
     static {
         try (InputStream inputStream = NPCDataLoader.class.getResourceAsStream(CSV_FILE)) {
@@ -61,15 +61,22 @@ public class NPCDataLoader {
                         List<String> attackStyle = NPCDataCleaner.parseNPCStringList(fields[12]);
 
                         String flatArmour = NPCDataCleaner.cleanData(fields[13]);
+                        String hitpoints = NPCDataCleaner.cleanData(fields[14]);
+                        String attackLevel = NPCDataCleaner.cleanData(fields[15]);
+                        String strengthLevel = NPCDataCleaner.cleanData(fields[16]);
+                        String defenceLevel = NPCDataCleaner.cleanData(fields[17]);
+                        String magicLevel = NPCDataCleaner.cleanData(fields[18]);
+                        String rangedLevel = NPCDataCleaner.cleanData(fields[19]);
+                        String attackSpeed = NPCDataCleaner.cleanData(fields[20]);
 
 
                         if (!npcIDs.isEmpty()) {
                             for (Integer id : npcIDs) { //create a new NPC object for each npc id with their realName, then we use the prefix of realName to find the main object in our other Map
-                                NPCStats npcStats = new NPCStats(realName, name, elementalWeakness, elementalPercent, crushDefence, stabDefence, slashDefence, standardDefence, heavyDefence, lightDefence, magicDefence, id, hasAltForms, maxHits, attackStyle, flatArmour);
+                                NPCStats npcStats = new NPCStats(realName, name, elementalWeakness, elementalPercent, crushDefence, stabDefence, slashDefence, standardDefence, heavyDefence, lightDefence, magicDefence, id, hasAltForms, maxHits, attackStyle, flatArmour, hitpoints, attackLevel, strengthLevel, defenceLevel, magicLevel, rangedLevel, attackSpeed);
                                 npcIDData.put(id, npcStats); //add to the map the id to this npcStats object. We add the full data because for mouseover tooltips we can use the data here and not search the other map.
                             }
                         }
-                        NPCStats npcStats = new NPCStats(realName, name, elementalWeakness, elementalPercent, crushDefence, stabDefence, slashDefence, standardDefence, heavyDefence, lightDefence, magicDefence, npcIDs.get(0), hasAltForms, maxHits, attackStyle, flatArmour);
+                        NPCStats npcStats = new NPCStats(realName, name, elementalWeakness, elementalPercent, crushDefence, stabDefence, slashDefence, standardDefence, heavyDefence, lightDefence, magicDefence, npcIDs.get(0), hasAltForms, maxHits, attackStyle, flatArmour, hitpoints, attackLevel, strengthLevel, defenceLevel, magicLevel, rangedLevel, attackSpeed);
                         if (hasAltForms && npcData.containsKey(name)) { //if this monster has alternate forms with different stats and the data entry already exists
                             npcData.get(name).addForm(npcStats); //we then add this data to the base entry in alternate forms
                         } else {

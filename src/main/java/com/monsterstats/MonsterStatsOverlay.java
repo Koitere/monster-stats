@@ -29,7 +29,7 @@ public class MonsterStatsOverlay extends Overlay
     final BufferedImage heavyIcon;
     final BufferedImage lightIcon;
     final BufferedImage elementalIcon;
-    final BufferedImage magicIcon;
+    final BufferedImage magicDefenceIcon;
     final BufferedImage fireIcon;
     final BufferedImage waterIcon;
     final BufferedImage airIcon;
@@ -37,6 +37,13 @@ public class MonsterStatsOverlay extends Overlay
     final BufferedImage maxHitIcon;
     final BufferedImage attackStyleIcon;
     final BufferedImage flatArmourIcon;
+    final BufferedImage hitpointsIcon;
+    final BufferedImage attackIcon;
+    final BufferedImage strengthIcon;
+    final BufferedImage defenceIcon;
+    final BufferedImage magicIcon;
+    final BufferedImage rangedIcon;
+    final BufferedImage attackSpeedIcon;
 
     @Inject
     MonsterStatsOverlay(MonsterStatsPlugin plugin, Client client, TooltipManager tooltipManager)
@@ -53,14 +60,21 @@ public class MonsterStatsOverlay extends Overlay
         heavyIcon = ImageUtil.loadImageResource(getClass(),"/Steel_bolts_5.png");
         lightIcon = ImageUtil.loadImageResource(getClass(),"/Steel_dart.png");
         elementalIcon = ImageUtil.loadImageResource(getClass(),"/Pure_essence.png");
-        magicIcon = ImageUtil.loadImageResource(getClass(),"/Magic_icon.png");
+        magicDefenceIcon = ImageUtil.loadImageResource(getClass(),"/Magic_defence_icon.png");
         fireIcon = ImageUtil.loadImageResource(getClass(), "/Fire_rune.png");
         waterIcon = ImageUtil.loadImageResource(getClass(), "/Water_rune.png");
         airIcon = ImageUtil.loadImageResource(getClass(), "/Air_rune.png");
         earthIcon = ImageUtil.loadImageResource(getClass(), "/Earth_rune.png");
         maxHitIcon = ImageUtil.loadImageResource(getClass(), "/Damage_hitsplat_(max_hit).png");
         attackStyleIcon = ImageUtil.loadImageResource(getClass(), "/Combat_icon.png");
-        flatArmourIcon = ImageUtil.loadImageResource(getClass(), "/Defence_icon.png");
+        flatArmourIcon = ImageUtil.loadImageResource(getClass(), "/Defence_icon_flat.png");
+        hitpointsIcon = ImageUtil.loadImageResource(getClass(), "/Hitpoints_icon.png");
+        attackIcon = ImageUtil.loadImageResource(getClass(), "/Attack_icon.png");
+        strengthIcon = ImageUtil.loadImageResource(getClass(), "/Strength_icon.png");
+        defenceIcon = ImageUtil.loadImageResource(getClass(), "/Defence_icon.png");
+        magicIcon = ImageUtil.loadImageResource(getClass(), "/Magic_icon.png");
+        rangedIcon = ImageUtil.loadImageResource(getClass(), "/Ranged_icon.png");
+        attackSpeedIcon = ImageUtil.loadImageResource(getClass(), "/Attack_speed_icon.png");
     }
 
     public BufferedImage getElementalWeaknessIcon(String elementalWeakness)
@@ -126,23 +140,41 @@ public class MonsterStatsOverlay extends Overlay
 private void renderTooltip(Graphics2D graphics, NPCStats stats)
 {
     Point mousePosition = client.getMouseCanvasPosition();
-    // Create a horizontal panel for icons and stats
-    PanelComponent rowPanel = new PanelComponent();
-    rowPanel.setPreferredLocation(new java.awt.Point(mousePosition.getX(), mousePosition.getY()));
-    rowPanel.setOrientation(ComponentOrientation.HORIZONTAL);
-    rowPanel.setBorder(new Rectangle(2,2,340,55)); //Set border of resulting tooltip
-    rowPanel.setGap(new java.awt.Point(2, 0));  // Add horizontal gap between components
 
-    tooltipManager.addFront(new Tooltip(rowPanel));
-    rowPanel.getChildren().add(createIconWithText( (stabIcon), stats.getStabDefence()));
-    rowPanel.getChildren().add(createIconWithText( (crushIcon), stats.getCrushDefence()));
-    rowPanel.getChildren().add(createIconWithText( (slashIcon), stats.getSlashDefence()));
-    rowPanel.getChildren().add(createIconWithText( (getElementalWeaknessIcon(stats.getElementalWeakness())), stats.getElementalPercent() + "%"));
-    rowPanel.getChildren().add(createIconWithText( (magicIcon), stats.getMagicDefence()));
-    rowPanel.getChildren().add(createIconWithText( (standardIcon), stats.getStandardDefence()));
-    rowPanel.getChildren().add(createIconWithText( (heavyIcon), stats.getHeavyDefence()));
-    rowPanel.getChildren().add(createIconWithText( (lightIcon), stats.getLightDefence()));
-    rowPanel.getChildren().add(createIconWithText( (flatArmourIcon), stats.getFlatArmour()));
+    // Create a horizontal panel for icons and defensive stats
+    PanelComponent rowDefencePanel = new PanelComponent();
+    rowDefencePanel.setPreferredLocation(new java.awt.Point(mousePosition.getX(), mousePosition.getY()));
+    rowDefencePanel.setOrientation(ComponentOrientation.HORIZONTAL);
+    rowDefencePanel.setBorder(new Rectangle(2,2,320,55)); //Set border of resulting tooltip
+    rowDefencePanel.setGap(new java.awt.Point(2, 0));  // Add horizontal gap between components
+
+    tooltipManager.addFront(new Tooltip(rowDefencePanel));
+    rowDefencePanel.getChildren().add(createIconWithText( (stabIcon), stats.getStabDefence()));
+    rowDefencePanel.getChildren().add(createIconWithText( (crushIcon), stats.getCrushDefence()));
+    rowDefencePanel.getChildren().add(createIconWithText( (slashIcon), stats.getSlashDefence()));
+    rowDefencePanel.getChildren().add(createIconWithText( (getElementalWeaknessIcon(stats.getElementalWeakness())), stats.getElementalPercent() + "%"));
+    rowDefencePanel.getChildren().add(createIconWithText( (magicDefenceIcon), stats.getMagicDefence()));
+    rowDefencePanel.getChildren().add(createIconWithText( (standardIcon), stats.getStandardDefence()));
+    rowDefencePanel.getChildren().add(createIconWithText( (heavyIcon), stats.getHeavyDefence()));
+    rowDefencePanel.getChildren().add(createIconWithText( (lightIcon), stats.getLightDefence()));
+
+
+    // Create a horizontal panel for icons and combat stats
+    PanelComponent rowCombatPanel = new PanelComponent();
+    rowCombatPanel.setPreferredLocation(new java.awt.Point(mousePosition.getX(), mousePosition.getY()));
+    rowCombatPanel.setOrientation(ComponentOrientation.HORIZONTAL);
+    rowCombatPanel.setBorder(new Rectangle(2,2,320,55)); //Set border of resulting tooltip
+    rowCombatPanel.setGap(new java.awt.Point(2, 0));  // Add horizontal gap between components
+
+    tooltipManager.addFront(new Tooltip(rowCombatPanel));
+    rowCombatPanel.getChildren().add(createIconWithText( (hitpointsIcon), stats.getHitpoints()));
+    rowCombatPanel.getChildren().add(createIconWithText( (attackIcon), stats.getAttackLevel()));
+    rowCombatPanel.getChildren().add(createIconWithText( (strengthIcon), stats.getStrengthLevel()));
+    rowCombatPanel.getChildren().add(createIconWithText( (defenceIcon), stats.getDefenceLevel()));
+    rowCombatPanel.getChildren().add(createIconWithText( (magicIcon), stats.getMagicLevel()));
+    rowCombatPanel.getChildren().add(createIconWithText( (rangedIcon), stats.getRangedLevel()));
+    rowCombatPanel.getChildren().add(createIconWithText( (flatArmourIcon), stats.getFlatArmour()));
+    rowCombatPanel.getChildren().add(createIconWithText( (attackSpeedIcon), stats.getAttackSpeed()));
 
 }
 
@@ -150,7 +182,7 @@ private void renderTooltip(Graphics2D graphics, NPCStats stats)
     {
         PanelComponent iconWithTextPanel = new PanelComponent();
         iconWithTextPanel.setOrientation(ComponentOrientation.VERTICAL);
-        iconWithTextPanel.setBorder(new Rectangle(2,2,34,50)); //set border of individual icon/value pair
+        iconWithTextPanel.setBorder(new Rectangle(2,2,36,50)); //set border of individual icon/value pair
         iconWithTextPanel.setGap(new java.awt.Point(0, 3));  // Add vertical gap between icon and text
         iconWithTextPanel.getChildren().add(new ImageComponent(icon)); //add icon
         LineComponent valueLine = LineComponent.builder().left(" ").right("").left(text).build();
