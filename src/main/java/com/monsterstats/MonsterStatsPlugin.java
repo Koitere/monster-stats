@@ -208,7 +208,7 @@ public class MonsterStatsPlugin extends Plugin
 			return;
 		}
 
-		queueExamineLine(stats.getSearchName() + " — HP: " + stats.getHitpoints());
+		queueExamineLine(stats.getSearchName() + " — HP: " + stats.getHitpoints() + " | Defence: " + stats.getDefenceLevel());
 		queueExamineLine("Melee Defence — Stab: " + stats.getStabDefence() + " | Slash: " + stats.getSlashDefence() + " | Crush: " + stats.getCrushDefence());
 		queueExamineLine("Magic Defence — Defence: " + stats.getMagicDefence() + " | Weakness: " + stats.getElementalWeakness() + " " + stats.getElementalPercent() + "%");
 		queueExamineLine("Ranged Defence — Standard: " + stats.getStandardDefence() + " | Heavy: " + stats.getHeavyDefence() + " | Light: " + stats.getLightDefence());
