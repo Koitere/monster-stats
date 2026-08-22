@@ -22,7 +22,7 @@ Shoutout to 'Coinmagnet_rs' on reddit for the original idea/request.
 - **Search Functionality**: Allows users to search for specific NPCs and view their defensive stats in the sidebar. Support for selecting alternate variants/forms of monsters by searching for the monster and using the variant buttons.
 <img width="295" height="1506" alt="image" src="https://github.com/user-attachments/assets/918f65f6-0d69-46c1-ad45-d8c903d34d42" />
 
-- **Stats on Examine**: Allows users to received a quick summary of the defensive stats of monsters when examining them.
+- **Stats on Examine**: Allows users to receive a quick summary of the defensive stats of monsters when examining them.
 <img width="698" height="146" alt="image" src="https://github.com/user-attachments/assets/64feb216-bc8f-4216-a555-69c921e062f3" />
 
 
