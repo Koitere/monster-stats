@@ -24,7 +24,8 @@ import net.runelite.client.chat.ChatColorType;
 import net.runelite.client.chat.ChatMessageBuilder;
 import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.input.KeyManager;
-import net.runelite.client.util.HotkeyListener;
+import net.runelite.client.input.KeyListener;
+import java.awt.event.KeyEvent;
 
 @PluginDescriptor(
 		name = "Monster Stats",
@@ -78,7 +79,7 @@ public class MonsterStatsPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		overlayManager.add(monsterStatsOverlay);
-		keyManager.registerKeyListener(modifierHotkeyListener);
+		keyManager.registerKeyListener(modifierKeyListener);
 
 		if (config.enableSidePanel()) {
 			addNavBar();
@@ -89,7 +90,7 @@ public class MonsterStatsPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		overlayManager.remove(monsterStatsOverlay);
-		keyManager.unregisterKeyListener(modifierHotkeyListener);
+		keyManager.unregisterKeyListener(modifierKeyListener);
 		clientToolbar.removeNavigation(navButton);
 		monsterStatsPanel = null;
 	}
@@ -227,18 +228,27 @@ public class MonsterStatsPlugin extends Plugin
 						.build());
 	}
 
-	private final HotkeyListener modifierHotkeyListener = new HotkeyListener(() -> config.tooltipModifierKey())
+	private final KeyListener modifierKeyListener = new KeyListener()
 	{
 		@Override
-		public void hotkeyPressed()
+		public void keyTyped(KeyEvent e) { }
+
+		@Override
+		public void keyPressed(KeyEvent e)
 		{
-			modifierHeld = true;
+			if (config.tooltipModifierKey().matches(e))
+			{
+				modifierHeld = true;
+			}
 		}
 
 		@Override
-		public void hotkeyReleased()
+		public void keyReleased(KeyEvent e)
 		{
-			modifierHeld = false;
+			if (config.tooltipModifierKey().matches(e))
+			{
+				modifierHeld = false;
+			}
 		}
 	};
 }
